@@ -1,6 +1,6 @@
 clear all;clc
 
-N=101; %set 
+N=11; %set size of matrix [A]
 dx=1/N;
 A_diag=eye(N-1)*(-4/dx^2) %diagonol entries of diag block
 A_diag=A_diag+diag(ones(N-2,1),  1)/dx^2; %40000 and 10000 on off diag
@@ -56,7 +56,6 @@ for j = 1
 end
 
 lambda=1/2;
-u=-(A_diag+lambda) \ F; %minus sign to move f on rhs
-%u=reshape(u,N-1,N-1) %reshape to make u a 99x99 double
+u=-(A+lambda) \ F; %minus sign to move f on rhs
 surf(u)
 
