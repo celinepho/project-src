@@ -5,25 +5,28 @@
 clear all;clc
 
 %Construct matrix A
-N = 11; %set size of matrix A
+N = 11; %set number of nodes which effects size of matrix A
 dx = 1/N; %distance between each node in x-space
-A_diag = eye (N-1) * (-4 / dx^2) %diagonal entries of diagonal block
-A_diag = A_diag + diag (ones (N-2,1) , 1) / dx^2; %values of 400 and 100 on off-diag
-A_diag = A_diag + diag (ones (N-2,1) , -1) / dx^2; %give values to all diagonal blocks
-A_offdiag = eye (N-1) / dx^2; %construct off-diagonal blocks
+onesmatrix = ones (N-2,1); %9x1 matrix of ones
+
+A_diag = eye (N-1) * (-4 / dx^2) %initial value (-4) for diag entries of diag block
+A_diag = A_diag + diag (onesmatrix , 1) / dx^2; %values for 1st diagonal of diag block
+A_diag = A_diag + diag (onesmatrix , -1) / dx^2; %values for diag below main diagonal of diag blocks
+A_offdiag = eye (N-1) / dx^2; %construct identity matrix for off-diag blocks
 
 %Put blocks in place in big matrix
-A = sparse ((N-1) * (N-1) , (N-1) * (N-1));%Sparse matrix so matlab can do less calculations-no need to calculate for zeros
+A = sparse ((N-1) * (N-1) , (N-1) * (N-1));%Sparse 100x100 matrix so less calculations needed
+%no need to calculate for zeros
+
 for i = 1:N-1
     A((i-1) * (N-1) + 1 : (i-1) * (N-1) + (N-1) , (i-1) * (N-1) + 1 : (i-1) * (N-1) + (N-1)) = A_diag; 
-    %range of rows corresponding to ith block do same on right side for columns
+   %range of rows&columns corresponding to ith block
+   %fill each row&column value in A_diag block
 end
-for i = 1:N-1 %for off-diagonal entries, loop again
-end
-for i = 2:N-1 %Starts at 2 since we have 1 less off diag block
-    %fill i entries
+for i = 2:N-1 %Starts at 2 since there is 1 less off diag block
+     %fill upper diag blocks
      A((i-2) * (N-1) + 1 : (i-2) * (N-1) + (N-1) , (i-1) * (N-1) + 1 : (i-1) * (N-1) + (N-1)) = A_offdiag;
-     %fill j entries
+     %%fill lower diag blocks (switch i&j entries)
      A((i-1) * (N-1) + 1 : (i-1) * (N-1) + (N-1) , (i-2) * (N-1) + 1 : (i-2) * (N-1) + (N-1)) = A_offdiag; 
 end
 
